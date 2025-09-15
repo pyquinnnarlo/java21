@@ -1,0 +1,19 @@
+"Name" = 'Java 21'
+"Author" = 'Quinn Narlo'
+         
+"Start Symbol" = <Program>
+
+!-------------------------------------------------
+!            TERMINAL
+!-------------------------------------------------
+ImportKeyword = 'import'
+Identifiers   = {Letter}{AlphaNumeric}*
+               
+
+<Program> ::= <Statement>
+           
+
+<Statement> ::= <Import>
+             
+<Import> ::= ImportKeyword Identifiers ';'   ! import java
+          |  ImportKeyword Identifiers '.' Identifiers ';'  ! import java.util
