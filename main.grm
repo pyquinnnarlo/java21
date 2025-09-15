@@ -7,13 +7,19 @@
 !            TERMINAL
 !-------------------------------------------------
 ImportKeyword = 'import'
+Dot           = '.'
+Semicolon     = ';'
 Identifiers   = {Letter}{AlphaNumeric}*
                
-
+!-------------------------------------------------
+!            NONTERMINAL
+!-------------------------------------------------
 <Program> ::= <Statement>
-           
 
 <Statement> ::= <Import>
-             
-<Import> ::= ImportKeyword Identifiers ';'   ! import java
-          |  ImportKeyword Identifiers '.' Identifiers ';'  ! import java.util
+
+
+
+<Import> ::= ImportKeyword <QualifiedName> Semicolon
+<QualifiedName> ::= Identifiers
+                  | <QualifiedName> Dot Identifiers
