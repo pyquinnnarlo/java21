@@ -97,14 +97,17 @@ Strings          = '"' {DQChar}* '"'
               |  <IfConditions>
               
 ! If-conditions
-<IfConditions> ::= 'if' <IfConditionsComparison> '{' <Block> '}'
-                |  'if' <IfConditionsComparison> '{' '}'
-                |  'if' <IfConditionsComparison> '{' <Block> '}' 'else' '{' <Block> '}'
-                |  'if' <IfConditionsComparison> '{' <Block> '}' 'else' '{' '}'
-                |  'if' <IfConditionsComparison> '{'  '}' 'else' '{' '}'
+<IfConditions> ::= 'if' <IfConditionsComparison> <IfConditionsBlock>
 
 <IfComparisonDefination> ::= <Expression> ComparisonOperator <Expression>
 <IfConditionsComparison> ::= '(' ')'
                           | '(' <IfComparisonDefination> ')'
                           
+<IfConditionsBlock> ::= '{' <Block> '}'
+                     | '{' '}'
+                     | '{' <Block> '}' 'else' '{' <Block> '}'
+                     | '{'  '}' 'else' '{' '}'
+                     
+
+
                           
