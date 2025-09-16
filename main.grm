@@ -16,10 +16,11 @@ ClassKeyword    = 'class'
 StaticKeyword   = 'static'
 FinalKeyword    = 'final'
                                 
-MethodType      = 'void'
-                | 'int'
+DataTypes        = 'int'
                 | 'boolean'
-                | 'String'          
+                | 'String' 
+                
+MethodTypes      = 'void'         
 !-------------------------------------------------
 !            NONTERMINAL
 !-------------------------------------------------
@@ -42,11 +43,16 @@ MethodType      = 'void'
          
 <MethodsList> ::= <Methods>
                | <Methods> <MethodsList>
-<Methods> ::= AccessModifiers MethodType Identifiers '(' ')' '{' '}'               ! private void greeting() {}
-           |  AccessModifiers StaticKeyword MethodType Identifiers '(' ')' '{' '}' ! private static int data() {}
-           |  AccessModifiers FinalKeyword  MethodType Identifiers '(' ')' '{' '}' ! private final void data() {}
-           |  MethodType Identifiers '(' ')' '{' '}'                               ! void main() {}
-           
-           
+<Methods> ::= AccessModifiers <MethodDataType> Identifiers <MethodPar> '{' '}'               ! private void greeting() {}
+           |  AccessModifiers StaticKeyword <MethodDataType> Identifiers <MethodPar> '{' '}' ! private static int data() {}
+           |  AccessModifiers FinalKeyword <MethodDataType>  Identifiers <MethodPar> '{' '}' ! private final void data() {}
+           |  MethodType Identifiers <MethodPar> '{' '}'  
+                                        
+<MethodParameterList> ::= <MethodParameter>
+                       |  <MethodParameter> ',' <MethodParameterList>
+<MethodParameter> ::= DataTypes Identifiers       
+<MethodPar> ::= '(' ')'
+             | '(' <MethodParameterList> ')'
 
-
+<MethodDataType> ::= MethodTypes
+                  | DataTypes
