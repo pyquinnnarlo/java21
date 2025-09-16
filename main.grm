@@ -10,7 +10,7 @@ ImportKeyword = 'import'
 Dot           = '.'
 Semicolon     = ';'
 Identifiers   = {Letter}{AlphaNumeric}*
-
+Numbers       = {Digit}+
 AccessModifiers = 'public' | 'private' | 'protected'
 ClassKeyword    = 'class'
 StaticKeyword   = 'static'
@@ -19,8 +19,21 @@ FinalKeyword    = 'final'
 DataTypes        = 'int'
                 | 'boolean'
                 | 'String' 
-                
-MethodTypes      = 'void'         
+                | 'double'
+                | 'float'
+                | 'char'
+BooleanValue     = 'true'
+                 | 'false' 
+                                
+MethodTypes      = 'void'
+
+ComparisonOperator = '=='
+                   | '>='
+                   | '<='
+                   | '!='
+                 
+{DQChar}         = {Printable} - ["]
+Strings          = '"' {DQChar}* '"'         
 !-------------------------------------------------
 !            NONTERMINAL
 !-------------------------------------------------
@@ -39,15 +52,27 @@ MethodTypes      = 'void'
 
 
 <Class> ::= AccessModifiers ClassKeyword Identifiers '{' '}'
+         |  AccessModifiers ClassKeyword Identifiers '{' <Variables> '}'
          |  AccessModifiers ClassKeyword Identifiers '{' <MethodsList> '}'
+
          
 <MethodsList> ::= <Methods>
-               | <Methods> <MethodsList>
-<Methods> ::= AccessModifiers <MethodDataType> Identifiers <MethodPar> '{' '}'               ! private void greeting() {}
-           |  AccessModifiers StaticKeyword <MethodDataType> Identifiers <MethodPar> '{' '}' ! private static int data() {}
-           |  AccessModifiers FinalKeyword <MethodDataType>  Identifiers <MethodPar> '{' '}' ! private final void data() {}
-           |  MethodType Identifiers <MethodPar> '{' '}'  
-                                        
+               |  <Methods> <MethodsList>
+               
+   
+<Methods> ::= AccessModifiers <MethodRef> <MethodDataType> Identifiers <MethodPar> '{' <MethodsList> '}'
+           |  <MethodDataType> Identifiers <MethodPar> '{' <MethodsList> '}'  
+           |  <Variables>
+           |  <IfConditions>
+              
+<Expression> ::= Identifiers
+              |  Numbers
+              |  Strings
+              |  BooleanValue
+                        
+<MethodRef> ::= StaticKeyword
+             |  FinalKeyword    
+             |                                   
 <MethodParameterList> ::= <MethodParameter>
                        |  <MethodParameter> ',' <MethodParameterList>
 <MethodParameter> ::= DataTypes Identifiers       
@@ -56,3 +81,30 @@ MethodTypes      = 'void'
 
 <MethodDataType> ::= MethodTypes
                   | DataTypes
+
+
+! Variables
+<Variables> ::= DataTypes Identifiers Semicolon
+             |  DataTypes Identifiers '=' Numbers Semicolon
+             |  DataTypes Identifiers '=' Identifiers Semicolon
+             |  DataTypes Identifiers '=' Strings Semicolon
+             |  DataTypes Identifiers '=' BooleanValue Semicolon
+             
+<Block> ::= <BlockItems>
+         |  <BlockItems> <Block>
+         
+<BlockItems> ::= <Variables>
+              |  <IfConditions>
+              
+! If-conditions
+<IfConditions> ::= 'if' <IfConditionsComparison> '{' <Block> '}'
+                |  'if' <IfConditionsComparison> '{' '}'
+                |  'if' <IfConditionsComparison> '{' <Block> '}' 'else' '{' <Block> '}'
+                |  'if' <IfConditionsComparison> '{' <Block> '}' 'else' '{' '}'
+                |  'if' <IfConditionsComparison> '{'  '}' 'else' '{' '}'
+
+<IfComparisonDefination> ::= <Expression> ComparisonOperator <Expression>
+<IfConditionsComparison> ::= '(' ')'
+                          | '(' <IfComparisonDefination> ')'
+                          
+                          
