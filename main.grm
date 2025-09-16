@@ -2,7 +2,7 @@
 "Author" = 'Quinn Narlo'
          
 "Start Symbol" = <Program>
-
+  
 !-------------------------------------------------
 !            TERMINAL
 !-------------------------------------------------
@@ -10,16 +10,28 @@ ImportKeyword = 'import'
 Dot           = '.'
 Semicolon     = ';'
 Identifiers   = {Letter}{AlphaNumeric}*
-               
+
+ 
+
 !-------------------------------------------------
 !            NONTERMINAL
 !-------------------------------------------------
+<Program> ::= <Statement> <Program>
 <Program> ::= <Statement>
 
 <Statement> ::= <Import>
-
+             | <Class>
+            
 
 
 <Import> ::= ImportKeyword <QualifiedName> Semicolon
 <QualifiedName> ::= Identifiers
                   | <QualifiedName> Dot Identifiers
+
+
+
+<Class> ::= 'public' 'class' Identifiers '{' <ClassMethod> '}'
+         
+<ClassMethod> ::= 'public' 'static' 'void' 'main' '(' ')' '{' '}'
+
+
