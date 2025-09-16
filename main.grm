@@ -11,8 +11,15 @@ Dot           = '.'
 Semicolon     = ';'
 Identifiers   = {Letter}{AlphaNumeric}*
 
- 
-
+AccessModifiers = 'public' | 'private' | 'protected'
+ClassKeyword    = 'class'
+StaticKeyword   = 'static'
+FinalKeyword    = 'final'
+                                
+MethodType      = 'void'
+                | 'int'
+                | 'boolean'
+                | 'String'          
 !-------------------------------------------------
 !            NONTERMINAL
 !-------------------------------------------------
@@ -30,8 +37,16 @@ Identifiers   = {Letter}{AlphaNumeric}*
 
 
 
-<Class> ::= 'public' 'class' Identifiers '{' <ClassMethod> '}'
+<Class> ::= AccessModifiers ClassKeyword Identifiers '{' '}'
+         |  AccessModifiers ClassKeyword Identifiers '{' <MethodsList> '}'
          
-<ClassMethod> ::= 'public' 'static' 'void' 'main' '(' ')' '{' '}'
+<MethodsList> ::= <Methods>
+               | <Methods> <MethodsList>
+<Methods> ::= AccessModifiers MethodType Identifiers '(' ')' '{' '}'               ! private void greeting() {}
+           |  AccessModifiers StaticKeyword MethodType Identifiers '(' ')' '{' '}' ! private static int data() {}
+           |  AccessModifiers FinalKeyword  MethodType Identifiers '(' ')' '{' '}' ! private final void data() {}
+           |  MethodType Identifiers '(' ')' '{' '}'                               ! void main() {}
+           
+           
 
 
