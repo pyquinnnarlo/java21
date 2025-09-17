@@ -15,7 +15,9 @@ AccessModifiers = 'public' | 'private' | 'protected'
 ClassKeyword    = 'class'
 StaticKeyword   = 'static'
 FinalKeyword    = 'final'
-                                
+ForKeyword      = 'for'
+WhileKeyword    = 'while'
+                                                           
 DataTypes        = 'int'
                 | 'boolean'
                 | 'String' 
@@ -31,7 +33,13 @@ ComparisonOperator = '=='
                    | '>='
                    | '<='
                    | '!='
-                 
+                   | '<'
+                   | '>'
+                   
+                   
+IncrementalOperators = '++'
+                     | '--'
+                                      
 {DQChar}         = {Printable} - ["]
 Strings          = '"' {DQChar}* '"'         
 !-------------------------------------------------
@@ -64,6 +72,9 @@ Strings          = '"' {DQChar}* '"'
            |  <MethodDataType> Identifiers <MethodPar> '{' <MethodsList> '}'  
            |  <Variables>
            |  <IfConditions>
+           |  <ForLoop>
+           |  <WhileLoop>
+           |  <Incremental>
               
 <Expression> ::= Identifiers
               |  Numbers
@@ -95,6 +106,9 @@ Strings          = '"' {DQChar}* '"'
          
 <BlockItems> ::= <Variables>
               |  <IfConditions>
+              |  <ForLoop>
+              |  <WhileLoop>
+              |  <Incremental>
               
 ! If-conditions
 <IfConditions> ::= 'if' <IfConditionsComparison> <IfConditionsBlock>
@@ -108,6 +122,24 @@ Strings          = '"' {DQChar}* '"'
                      | '{' <Block> '}' 'else' '{' <Block> '}'
                      | '{'  '}' 'else' '{' '}'
                      
+! For loop
+<ForLoop> ::= ForKeyword <ForLoopItem> '{' <Block> '}'
+           |  ForKeyword <ForLoopItem> '{' '}'
+
+<ForLoopItem> ::= '(' <MethodDataType> Identifiers '=' <Expression> Semicolon Identifiers ComparisonOperator <Expression> Semicolon Identifiers IncrementalOperators ')'
+               | '(' ')'
+
+                  
+! While Loop
+<WhileLoop> ::= WhileKeyword <WhileLoopItem> '{' <Block> '}' 
+             |  WhileKeyword <WhileLoopItem> '{' '}'
+             
+<WhileLoopItem> ::= '(' <Expression> ComparisonOperator <Expression> ')' 
+                 |  '(' BooleanValue ')'      
+
+<Incremental> ::= Identifiers IncrementalOperators Semicolon
+               
 
 
-                          
+
+
